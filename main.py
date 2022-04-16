@@ -8,7 +8,4 @@ j2 = Jogador('Jogador 2')
 
 batalha.set_jogadores(j1,j2)
 
-batalha.entregar_cartas()
-
-j1.get_deck()
-j2.get_deck()
+batalha.iniciar_jogo()
