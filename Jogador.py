@@ -1,3 +1,4 @@
+from Carta import Carta
 from PilhaEncadeada import *
 class JogadorException(Exception):
     def __init__(self,mensagem,metodo=''):
@@ -24,7 +25,7 @@ class Jogador:
         self.__deck.enfileirar_embaixo(carta)
         self.__tamanho_deck += 1
     
-    def jogar_carta(self):
+    def jogar_carta(self) -> Carta:
         try:
             carta = self.__deck.desempilhar()
             self.__tamanho_deck -= 1

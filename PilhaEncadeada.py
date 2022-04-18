@@ -84,12 +84,15 @@ class Pilha:
     def enfileirar_embaixo(self, valor):
         novoNode = Node(valor)
         
+        if self.__base == None:
+            self.__base = novoNode
+            
         if self.__cauda == None:
             self.__base.prox = novoNode
             self.__cauda = novoNode
-        
-        self.__cauda.prox = novoNode  
-        self.__cauda = novoNode
+        else:
+            self.__cauda.prox = novoNode  
+            self.__cauda = novoNode
 
     def imprimir(self):
         print(self.__str__())    

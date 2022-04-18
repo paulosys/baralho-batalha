@@ -13,6 +13,28 @@ class Batalha:
         self.__vencedor_rodada = None
         self.__vencedor_jogo = None
     
+    def iniciar_jogo(self) -> None:
+        self.set_jogadores()
+        
+        self.__baralho = self.__baralho.montar()
+        
+        decisao = input("Deseja ver as cartas do baralho? (S/N) ").upper()
+        if decisao == 'S':
+            self.__baralho.imprimir()
+        
+        self.entregar_cartas()
+        
+        input("Pressione ENTER para começar o jogo.")
+        
+        while not self.__vencedor_jogo:
+            self.duelo()
+            self.verificar_vencedor_jogo()
+            if self.__cont_rodadas > self.__limite_rodadas:
+                print("Jogo Finalizando por execução de 100 rodadas, o vencedor será definido pelo maior número de cartas restantes.")
+                break
+            
+        self.fim_jogo()
+    
     def set_jogadores(self) -> None:
         print("\n======= Definindo Jogadores =======\n")
         self.__j1 = Jogador(input("Digite o nome do jogador 1: "))
@@ -42,28 +64,6 @@ class Batalha:
             self.__j1.imprimir_deck()
             print(f"{self.__j2.get_nome()} tem {self.__j2.get_tamanho_deck()} cartas, seu deck:")
             self.__j2.imprimir_deck()
-        
-    def iniciar_jogo(self) -> None:
-        self.set_jogadores()
-        
-        self.__baralho = self.__baralho.montar()
-        
-        decisao = input("Deseja ver as cartas do baralho? (S/N) ").upper()
-        if decisao == 'S':
-            self.__baralho.imprimir()
-        
-        self.entregar_cartas()
-        
-        input("Pressione ENTER para começar o jogo.")
-        
-        while not self.__vencedor_jogo:
-            self.duelo()
-            self.verificar_vencedor_jogo()
-            if self.__cont_rodadas > self.__limite_rodadas:
-                print("Jogo Finalizando por execução de 100 rodadas, o vencedor será definido pelo maior número de cartas restantes.")
-                break
-            
-        self.fim_jogo()
             
     def verificar_vencedor_jogo(self):
         if self.__j1.get_tamanho_deck() == 0:   
@@ -79,7 +79,7 @@ class Batalha:
         for carta in self.__cartas_acumuladas:
             self.__vencedor_rodada.guardar_cartas(carta)
         
-        print(f"{self.__vencedor_rodada.get_nome()} ganhou as cartas que foram acumuladas:\n")
+        print(f"{self.__vencedor_rodada.get_nome()} ganhou as {len(self.__cartas_acumuladas)} cartas que foram acumuladas:\n")
         for carta in self.__cartas_acumuladas:
             print(f"{carta} ", end=" \n") 
             
@@ -107,10 +107,10 @@ class Batalha:
         print(f'| {carta1} | X | {carta2} |', end='    ')
         print(f'({self.__j2.get_nome()}: {self.__j2.get_tamanho_deck()} cartas)\n')
     
-    def comparar_cartas(self, carta1, carta2):
-        if carta1.peso > carta2.peso:
+    def comparar_cartas(self, carta1: Carta, carta2: Carta):
+        if carta1.get_peso > carta2.get_peso:
             return self.__j1
-        elif carta2.peso > carta1.peso:
+        elif carta2.get_peso > carta1.get_peso:
             return self.__j2
         else:
             return self.rodada_empate()
@@ -136,7 +136,7 @@ class Batalha:
             if self.__j1.get_tamanho_deck() > self.__j2.get_tamanho_deck():
                 self.__vencedor_jogo = self.__j1
             else:
-                self.__vencedor_jogo = self.__j2
+                self.__vencedor_jogo = self.__j2  
              
         print(f'\n===== Fim de Jogo! =====\n')
         print(f'({self.__j1.get_nome()}: {self.__j1.get_tamanho_deck()} cartas)')
