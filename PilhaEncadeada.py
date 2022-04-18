@@ -26,19 +26,15 @@ class Pilha:
         self.__head = None
         self.__tamanho = 0
         self.__base = None
-        self.__calda = None
-        self.__tamanho_embaixo = 0
+        self.__cauda = None
         
-    def getbaseprox(self):
-        return self.__base.getProximo()
-        
-    def estaVazia(self):
+    def estaVazia(self) -> bool:
         return self.__head == None
 
-    def tamanho(self):
+    def tamanho(self) -> int:
         return self.__tamanho
 
-    def elemento(self, posicao):
+    def elemento(self, posicao) -> Node:
         try:
             assert posicao > 0 and posicao <= self.__tamanho
  
@@ -77,7 +73,7 @@ class Pilha:
         self.__head = novoNode
         self.__tamanho += 1
         
-    def desempilhar(self):
+    def desempilhar(self) -> Node:
         if not self.estaVazia():
             dado = self.__head.dado
             self.__head = self.__head.prox
@@ -85,57 +81,36 @@ class Pilha:
             return dado
         raise PilhaException('A pilha está vazia')
         
-    def empilhar_embaixo(self, valor):
+    def enfileirar_embaixo(self, valor):
         novoNode = Node(valor)
-        if self.__base == None:
-            self.__base = novoNode
-            
-        novoNode.prox = self.__calda
         
-        self.__calda = novoNode
-        self.__tamanho_embaixo += 1
+        if self.__cauda == None:
+            self.__base.prox = novoNode
+            self.__cauda = novoNode
         
-    def desempilhar_embaixo(self):
-        if not self.estaVazia():
-                dado = self.__calda.dado
-                self.__head = self.__calda.prox
-                self.__tamanho_embaixo -= 1
-                return dado
-        raise PilhaException('A pilha está vazia')
-    
-    def redefinir_pilha(self):
-        self.__head = self.__calda
-        no = self.__head
-        
-        while no.prox != None:
-            no = no.prox
-        
-        self.__base = no
-        self.__tamanho = self.__tamanho_embaixo
-        self.__tamanho_embaixo = 0
-    
+        self.__cauda.prox = novoNode  
+        self.__cauda = novoNode
+
     def imprimir(self):
-        print(self.__str__())
+        print(self.__str__())    
         
     def imprimir_embaixo(self):
-        print("printando embaixo")
-        no = self.__calda
-        while no:
+        no = self.__base.prox
+        while no != None:
             print(no.dado)
             no = no.prox
-        print("printou embaixo")
         
     def limpar_pilha(self):
         self.__head = None
         self.__tamanho = 0
         self.__base = None
-        self.__calda = None
-        self.__tamanho_embaixo = 0
+        self.__cauda = None
         
     def __str__(self):
+        print()
         no = self.__head
         while no:
             print(f'{no.dado}')
             no = no.prox
         print()
-        return 'Fim do Baralho'
+        return ''
