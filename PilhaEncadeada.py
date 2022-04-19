@@ -82,7 +82,7 @@ class Pilha:
         
     def enfileirar_embaixo(self, valor):
         '''
-        Método utilizado para enfileirar abaixo da base da pilha
+        Método utilizado para enfileirar abaixo da base da pilha para
         os jogadores guardarem as cartas ganhas durante o jogo;
         
         Basicamente, o método enfileira o valor na base da pilha

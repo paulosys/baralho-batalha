@@ -28,16 +28,6 @@ class Batalha:
         
         self.iniciar_jogo()
     
-    def iniciar_jogo(self) -> None:
-        while not self.__vencedor_jogo:
-            self.duelo()
-            self.__vencedor_jogo = self.verificar_vencedor_jogo()
-            if self.__cont_rodadas > self.__limite_rodadas:
-                print("Jogo Finalizando por execução de 100 rodadas, o vencedor será definido pelo maior número de cartas restantes.")
-                break
-            
-        self.fim_jogo()
-    
     def set_jogadores(self) -> None:
         print("\n======= Definindo Jogadores =======\n")
         self.__j1 = Jogador(input("Digite o nome do jogador 1: "))
@@ -67,13 +57,17 @@ class Batalha:
             for jogador in jogadores:
                 print(f"{jogador.get_nome()} tem {jogador.get_tamanho_deck()} cartas, seu deck:")
                 jogador.imprimir_deck()
+    
+    def iniciar_jogo(self) -> None:
+        while not self.__vencedor_jogo:
+            self.duelo()
+            self.__vencedor_jogo = self.verificar_vencedor_jogo()
+            if self.__cont_rodadas > self.__limite_rodadas:
+                print("Jogo Finalizando por execução de 100 rodadas, o vencedor será definido pelo maior número de cartas restantes.")
+                break
             
-    def verificar_vencedor_jogo(self):
-        if self.__j1.get_tamanho_deck() == 0:   
-            return self.__j2    
-        elif self.__j2.get_tamanho_deck() == 0:
-            return self.__j1
-        return None      
+        self.fim_jogo()
+        
 
     def duelo(self):
         carta_j1, carta_j2 = self.get_cartas_jogadas()
@@ -96,7 +90,7 @@ class Batalha:
         self.__cont_rodadas += 1
         
         self.__vencedor_rodada = None
-        input("\nPressione ENTER para continuar o jogo.")
+        input("\nPressione ENTER para continuar o jogo.")    
       
     def get_cartas_jogadas(self):
         carta_jogador1 = self.__j1.jogar_carta()
@@ -128,7 +122,6 @@ class Batalha:
         '''
         Se ocorrer um empate, o programa pede mais uma rodada, compara as cartas, até que um dos jogadores desempatem o jogo, se isso não ocorrer, o programa chama o método roda_empate() recursivamente
         '''
-        
         print(f'Rodada {self.__cont_rodadas} empatada!\n')
         print(f"As cartas acumularão até um desempate, cartas acumuladas atualmente: \n")
             
@@ -142,6 +135,13 @@ class Batalha:
         self.imprimir_duelo(carta_j1, carta_j2)
         
         self.comparar_cartas(carta_j1, carta_j2)
+    
+    def verificar_vencedor_jogo(self):
+        if self.__j1.get_tamanho_deck() == 0:   
+            return self.__j2    
+        elif self.__j2.get_tamanho_deck() == 0:
+            return self.__j1
+        return None  
     
     def fim_jogo(self):
         
