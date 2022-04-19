@@ -95,6 +95,7 @@ class Pilha:
             
         self.__base.prox = novoNode 
         self.__base = novoNode
+        self.__tamanho += 1
 
     def imprimir(self):
         print(self.__str__())    

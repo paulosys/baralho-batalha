@@ -14,7 +14,8 @@ class Batalha:
         self.__vencedor_jogo = None
     
     def configurar_jogo(self):
-        self.set_jogadores()
+        if self.__j1 == None and self.__j2 == None:
+            self.set_jogadores()
         
         self.__baralho = self.__baralho.montar()
         
@@ -177,4 +178,4 @@ class Batalha:
         self.__baralho = Baralho()
         self.__j1.limpar_deck()
         self.__j2.limpar_deck()
-        self.iniciar_jogo()
+        self.configurar_jogo()
