@@ -86,7 +86,7 @@ class Pilha:
         os jogadores guardarem as cartas ganhas durante o jogo;
         
         Basicamente, o método enfileira o valor na base da pilha
-        criando uma nova base, e a nova base aponta para a base antiga
+        criando uma nova base, e a base antiga aponta para a nova base.
         '''
         novoNode = Node(valor)
         

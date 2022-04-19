@@ -107,7 +107,7 @@ class Batalha:
         
         return carta_jogador1, carta_jogador2
     
-    def imprimir_duelo(self, carta1, carta2):
+    def imprimir_duelo(self, carta1: Carta, carta2: Carta):
         print(f'\n===== Rodada {self.__cont_rodadas} =====\n')
         print(f'({self.__j1.get_nome()}: {self.__j1.get_tamanho_deck()} cartas)', end='    ')
         print(f'| {carta1} | X | {carta2} |', end='    ')
