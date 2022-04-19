@@ -26,7 +26,6 @@ class Pilha:
         self.__head = None
         self.__tamanho = 0
         self.__base = None
-        self.__cauda = None
         
     def estaVazia(self) -> bool:
         return self.__head == None
@@ -82,32 +81,28 @@ class Pilha:
         raise PilhaException('A pilha está vazia')
         
     def enfileirar_embaixo(self, valor):
+        '''
+        Método utilizado para enfileirar abaixo da base da pilha
+        os jogadores guardarem as cartas ganhas durante o jogo;
+        
+        Basicamente, o método enfileira o valor na base da pilha
+        criando uma nova base, e a nova base aponta para a base antiga
+        '''
         novoNode = Node(valor)
         
         if self.__base == None:
             self.__base = novoNode
             
-        if self.__cauda == None:
-            self.__base.prox = novoNode
-            self.__cauda = novoNode
-        else:
-            self.__cauda.prox = novoNode  
-            self.__cauda = novoNode
+        self.__base.prox = novoNode 
+        self.__base = novoNode
 
     def imprimir(self):
         print(self.__str__())    
         
-    def imprimir_embaixo(self):
-        no = self.__base.prox
-        while no != None:
-            print(no.dado)
-            no = no.prox
-        
     def limpar_pilha(self):
         self.__head = None
-        self.__tamanho = 0
         self.__base = None
-        self.__cauda = None
+        self.__tamanho = 0
         
     def __str__(self):
         print()

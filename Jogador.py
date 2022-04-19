@@ -21,6 +21,9 @@ class Jogador:
         self.__deck.empilhar(carta)
         self.__tamanho_deck = self.__deck.tamanho()
     
+    def get_tamanho_deck(self) -> int:
+        return self.__tamanho_deck
+    
     def guardar_cartas(self, carta):
         self.__deck.enfileirar_embaixo(carta)
         self.__tamanho_deck += 1
@@ -34,14 +37,8 @@ class Jogador:
             
         return carta
     
-    def get_tamanho_deck(self) -> int:
-        return self.__tamanho_deck
-    
     def imprimir_deck(self):
         self.__deck.imprimir()
-    
-    def mostrar_cartas_amontoadas(self):
-        self.__deck.imprimir_embaixo()
 
     def limpar_deck(self):
         self.__deck.limpar_pilha()

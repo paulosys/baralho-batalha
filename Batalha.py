@@ -13,7 +13,7 @@ class Batalha:
         self.__vencedor_rodada = None
         self.__vencedor_jogo = None
     
-    def iniciar_jogo(self) -> None:
+    def configurar_jogo(self):
         self.set_jogadores()
         
         self.__baralho = self.__baralho.montar()
@@ -26,9 +26,12 @@ class Batalha:
         
         input("Pressione ENTER para começar o jogo.")
         
+        self.iniciar_jogo()
+    
+    def iniciar_jogo(self) -> None:
         while not self.__vencedor_jogo:
             self.duelo()
-            self.verificar_vencedor_jogo()
+            self.__vencedor_jogo = self.verificar_vencedor_jogo()
             if self.__cont_rodadas > self.__limite_rodadas:
                 print("Jogo Finalizando por execução de 100 rodadas, o vencedor será definido pelo maior número de cartas restantes.")
                 break
@@ -44,36 +47,41 @@ class Batalha:
         print("======= Jogadores definidos com Sucesso! =======\n")
         
     def entregar_cartas(self) -> None:
+        metade_baralho = 52 // 2
         jogadores = [self.__j1, self.__j2]
         input("Pressione ENTER para Entregar as cartas.")
-        print()
         for jogador in jogadores:
             for i in range(3):
-                print(f"Entregando as cartas para {jogador.get_nome()}...\n")
+                print(f"\nEntregando as cartas para {jogador.get_nome()}...")
                 sleep(0.5)
-            for j in range(26):
+            for carta in range(metade_baralho):
                 try:
                     jogador.set_deck(self.__baralho.desempilhar())
                 except IndexError:
                     raise BaralhoException('O baralho está vazio. Não há cartas para dividir')
-            print(f"======= Cartas entregues para {jogador.get_nome()} ======= \n")
+            print(f"\n======= Cartas entregues para {jogador.get_nome()} =======")
         
-        decisao = input(f"Deseja ver as cartas dos jogadores? (S/N) ").upper()
+        decisao = input(f"\nDeseja ver as cartas dos jogadores? (S/N) ").upper()
+        print("\n")
         if decisao == 'S':
-            print(f"\n{self.__j1.get_nome()} tem {self.__j1.get_tamanho_deck()} cartas, seu deck:")
-            self.__j1.imprimir_deck()
-            print(f"{self.__j2.get_nome()} tem {self.__j2.get_tamanho_deck()} cartas, seu deck:")
-            self.__j2.imprimir_deck()
+            for jogador in jogadores:
+                print(f"{jogador.get_nome()} tem {jogador.get_tamanho_deck()} cartas, seu deck:")
+                jogador.imprimir_deck()
             
     def verificar_vencedor_jogo(self):
         if self.__j1.get_tamanho_deck() == 0:   
-            self.__vencedor_jogo = self.__j2    
+            return self.__j2    
         elif self.__j2.get_tamanho_deck() == 0:
-            self.__vencedor_jogo = self.__j1            
+            return self.__j1
+        return None      
 
     def duelo(self):
-        self.get_cartas_jogadas()
+        carta_j1, carta_j2 = self.get_cartas_jogadas()
         
+        self.imprimir_duelo(carta_j1, carta_j2)
+        
+        self.comparar_cartas(carta_j1, carta_j2)
+    
         print(f'==== {self.__vencedor_rodada.get_nome()} venceu a rodada! ====\n')
         
         for carta in self.__cartas_acumuladas:
@@ -83,7 +91,7 @@ class Batalha:
         for carta in self.__cartas_acumuladas:
             print(f"{carta} ", end=" \n") 
             
-        self.__cartas_acumuladas.clear()
+        self.__cartas_acumuladas.clear() # Limpa a lista de cartas acumuladas para a próxima rodada
 
         self.__cont_rodadas += 1
         
@@ -97,38 +105,43 @@ class Batalha:
         self.__cartas_acumuladas.append(carta_jogador1)
         self.__cartas_acumuladas.append(carta_jogador2)
         
-        self.imprimir_duelo(carta_jogador1, carta_jogador2)
-        
-        self.__vencedor_rodada = self.comparar_cartas(carta_jogador1, carta_jogador2)
+        return carta_jogador1, carta_jogador2
     
     def imprimir_duelo(self, carta1, carta2):
         print(f'\n===== Rodada {self.__cont_rodadas} =====\n')
-        print(f'({self.__j1.get_nome()}: {self.__j1.get_tamanho_deck()} cartas)' ,end='    ')
+        print(f'({self.__j1.get_nome()}: {self.__j1.get_tamanho_deck()} cartas)', end='    ')
         print(f'| {carta1} | X | {carta2} |', end='    ')
         print(f'({self.__j2.get_nome()}: {self.__j2.get_tamanho_deck()} cartas)\n')
     
     def comparar_cartas(self, carta1: Carta, carta2: Carta):
+        '''
+        Define o vencedor da rodada de acordo com a maior carta. (peso)
+        '''
         if carta1.get_peso > carta2.get_peso:
-            return self.__j1
+            self.__vencedor_rodada = self.__j1
         elif carta2.get_peso > carta1.get_peso:
-            return self.__j2
+            self.__vencedor_rodada = self.__j2
         else:
-            return self.rodada_empate()
+            self.rodada_empate()
             
     def rodada_empate(self):
+        '''
+        Se ocorrer um empate, o programa pede mais uma rodada, compara as cartas, até que um dos jogadores desempatem o jogo, se isso não ocorrer, o programa chama o método roda_empate() recursivamente
+        '''
         
-        while self.__vencedor_rodada is None:
-            print(f'Rodada {self.__cont_rodadas} empatada!\n')
-            print(f"Quem desempatar ganhará essas cartas: \n")
+        print(f'Rodada {self.__cont_rodadas} empatada!\n')
+        print(f"As cartas acumularão até um desempate, cartas acumuladas atualmente: \n")
             
-            for carta in self.__cartas_acumuladas:
-                print( carta)
-            print()
-            
-            input("Pressione ENTER para continuar o empate.")
-            self.get_cartas_jogadas()
+        for carta in self.__cartas_acumuladas:
+            print(carta)
+        print()
+        input("Pressione ENTER para continuar o empate.")
         
-        return self.__vencedor_rodada
+        carta_j1, carta_j2 = self.get_cartas_jogadas()
+        
+        self.imprimir_duelo(carta_j1, carta_j2)
+        
+        self.comparar_cartas(carta_j1, carta_j2)
     
     def fim_jogo(self):
         
@@ -142,13 +155,12 @@ class Batalha:
         print(f'({self.__j1.get_nome()}: {self.__j1.get_tamanho_deck()} cartas)')
         print(f'({self.__j2.get_nome()}: {self.__j2.get_tamanho_deck()} cartas)\n')
            
-        print(f'{self.__vencedor_jogo.get_nome()} VENCEU O JOGO!')
+        print(f'{self.__vencedor_jogo.get_nome()} VENCEU O JOGO!\n')
         
         decisao = input("Jogo encerrado! Deseja jogar novamente? (S/N)").upper()
         
         while decisao != 'S' and decisao != 'N':
-            print()
-            decisao = input("Opção Inválida. Deseja jogar novamente? (S/N)").upper() 
+            decisao = input("\nOpção Inválida. Deseja jogar novamente? (S/N)").upper() 
         
         if decisao == 'S':
             self.resetar_jogo()

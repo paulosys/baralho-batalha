@@ -25,5 +25,4 @@ class Carta:
     def __str__(self): # todas as informacoes da carta
         if self.__cor == "azul":
             return  "\033[1;31m" + f'{self.get_numero} de {self.get_naipe}' + "\033[0;0m"
-        
         return  "\033[1;34m" + f'{self.get_numero} de {self.get_naipe}' + "\033[0;0m"

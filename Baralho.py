@@ -16,6 +16,7 @@ class Baralho:
         cor =   ["vermelho","azul", "azul","vermelho"]
         numeracao = ["As","2","3","4","5","6","7","8","9","10","Valete","Dama","Rei"]
         peso =  [1,2,3,4,5,6,7,8,9,10,11,12,13]
+        #peso =  [1,1,1,1,1,1,1,1,1,1,10,11,12,13] #aumentar chance de empates
 
         for idx in range(len(naipe)):
             for num in range(len(numeracao)):
@@ -51,15 +52,6 @@ class Baralho:
             sleep(0.5)
         shuffle(self.__baralho) ## Método do random para embaralhar uma lista
         print("\n======= Cartas Embaralhadas Com Sucesso! =======\n")
-        
-    def dividirBaralho(self):
-        parteBaralho = []
-        for carta in range(26):
-            try:
-                parteBaralho.append(self.__baralhoPilha.desempilhar())
-            except IndexError:
-                raise BaralhoException('O baralho está vazio.')
-        return parteBaralho
 
     def __str__(self) -> str:
         saida = ''
